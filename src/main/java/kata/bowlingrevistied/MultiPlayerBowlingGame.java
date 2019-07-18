@@ -1,29 +1,32 @@
 package kata.bowlingrevistied;
 
+import kata.bowling.BowlingGame;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class MultiPlayerBowlingGame {
 
-    private final int[] rolls = new int[21];
-    private int rollCounter = 0;
+   private final Map<String, BowlingGame> bowlingGames = new HashMap<>();
 
-    public void roll(int pins) {
-        rolls[rollCounter] = pins;
-        rollCounter++;
-    }
+   public MultiPlayerBowlingGame(List<String> playerNames) {
+      for (String playerName : playerNames) {
+         bowlingGames.put(playerName, new BowlingGame());
+      }
+   }
 
-    public int getScore() {
-        int score = 0;
-        int rollsLeft = 20;
-        for (int i = 0; i < rollsLeft; i++) {
-            if (rolls[i] == 10) {
-                score += 10 + rolls[i + 1] + rolls[i + 2];
-                rollsLeft--;
-            } else if (rolls[i] + rolls[i + 1] == 10) {
-                score += 10 + rolls[i + 2];
-                i++;
-            } else {
-                score += rolls[i];
-            }
-        }
-        return score;
-    }
+   public void rollPins(int numberOfPins, String playerName) {
+      if (!bowlingGames.containsKey(playerName)) {
+         throw new InvalidPlayerException();
+      }
+      bowlingGames.get(playerName).score(numberOfPins);
+   }
+
+   public int getScore(String playerName) {
+      if (!bowlingGames.containsKey(playerName)) {
+         throw new InvalidPlayerException();
+      }
+      return bowlingGames.get(playerName).getScore();
+   }
 }
