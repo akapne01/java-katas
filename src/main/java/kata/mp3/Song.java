@@ -16,4 +16,8 @@ public class Song {
     public String getArtist() {
         return artist;
     }
+
+    public String toString() {
+        return title + ", " + artist;
+    }
 }
