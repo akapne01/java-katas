@@ -15,6 +15,8 @@ public class CalendarManagerTest {
    CalendarManager calendarManager = new CalendarManager();
    Meeting retro = new Meeting("retro", LocalDateTime.of(2019, Month.AUGUST, 27, 11, 00),
       LocalDateTime.of(2019, Month.AUGUST, 27, 12, 00));
+   Meeting anotherRetro = new Meeting("retro", LocalDateTime.of(2019, Month.AUGUST, 28, 11, 00),
+      LocalDateTime.of(2019, Month.AUGUST, 28, 12, 00));
    Meeting planning = new Meeting("planning", LocalDateTime.of(2019, Month.AUGUST, 27, 14, 00),
       LocalDateTime.of(2019, Month.AUGUST, 27, 15, 30));
    Meeting standUp = new Meeting("stand up", LocalDateTime.of(2019, Month.AUGUST, 27, 9, 20),
@@ -66,6 +68,47 @@ public class CalendarManagerTest {
 
       assertThat(scheduledMeetings.get(0), is(planning));
       assertThat(scheduledMeetings.size(), is(1));
+   }
 
+   @Test
+   public void shouldReturnSuccessfulIfCalendarOperationResultWasCompleted() {
+      // given -  non clashing meetings
+      //standUp and planning are non clashing meetings
+
+      // When - meetings scheduled
+      CalendarOperationResult result = calendarManager.schedule(standUp);
+      CalendarOperationResult result2 = calendarManager.schedule(planning);
+
+      // Then - both scheduling operations are successful
+      assertTrue(result.isSuccessful());
+      assertTrue(result2.isSuccessful());
+   }
+
+   @Test
+   public void shouldReturnTheReasonIfCalendarOperationResultFailed() {
+      // given - scheduled meeting that overlap
+
+      // When - meeting was failed to be scheduled
+      CalendarOperationResult result = calendarManager.schedule(planning);
+      CalendarOperationResult failingResult = calendarManager.schedule(overLappingWithPlanning);
+
+      // Then - schedule method returns the reason why the Operation failed
+      assertTrue(result.isSuccessful());
+      assertFalse(failingResult.isSuccessful());
+      assertThat(failingResult.getFailingReason(), is("Overlapping meeting overlaps with planning"));
+   }
+
+   @Test
+   public void shouldReturnErrorMessageIfMeetingWithTheSameNameAlreadyExists() {
+
+      // Given - 2 meetings with the same name
+      CalendarOperationResult retroResult = calendarManager.schedule(retro);
+      // When - adding the second meeting
+      CalendarOperationResult anotherRetroResult = calendarManager.schedule(anotherRetro);
+
+      // Then - error message returned
+      String returnMessage = "Meeting with name retro already exists";
+      assertTrue(retroResult.isSuccessful());
+      assertThat(anotherRetroResult.getFailingReason(), is(returnMessage));
    }
 }

@@ -1,33 +1,23 @@
 package kata.calendar;
 
 public class CalendarOperationResult {
+   private final boolean successful;
+   private final String failingReason;
 
-    private final boolean success;
-    private final String failureReason;
+   public CalendarOperationResult(boolean successful) {
+      this(successful, "Successful");
+   }
 
+   public CalendarOperationResult(boolean successful, String failingReason) {
+       this.successful = successful;
+       this.failingReason = failingReason;
+   }
 
-    private CalendarOperationResult(boolean success, String failureReason) {
-        this.success = success;
-        this.failureReason = failureReason;
-    }
+   public boolean isSuccessful() {
+      return successful;
+   }
 
-    public static CalendarOperationResult success() {
-        return new CalendarOperationResult(true, null);
-    }
-
-    public static CalendarOperationResult failure(String failureReason) {
-        return new CalendarOperationResult(false, failureReason);
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public boolean isFailure() {
-        return !success;
-    }
-
-    public String getFailureReason() {
-        return failureReason;
+    public String getFailingReason() {
+       return failingReason;
     }
 }
