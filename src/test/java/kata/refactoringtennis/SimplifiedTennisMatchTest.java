@@ -51,7 +51,7 @@ public class SimplifiedTennisMatchTest {
     public void testNeedToWinByAMarginOf2Points() throws Exception {
         nadalScore(3);
         federerScore(3);
-        nadalScore(1);
+        nadalScore(2);
 
         String expectedScoreString = new StringBuilder()
                 .append("Nadal - Federer\n")
@@ -71,6 +71,12 @@ public class SimplifiedTennisMatchTest {
                 .append("DEUCE")
                 .toString();
         assertThat(match.formatScore(), is(expectedScoreString));
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void shuoldNotAllowToAddScoresAfterMatchFinished() {
+        nadalScore(4);
+        federerScore(1);
     }
 
 

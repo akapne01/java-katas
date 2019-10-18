@@ -1,6 +1,5 @@
 package kata.amazon;
 
-import com.sun.javaws.exceptions.ErrorCodeResponseException;
 
 public class StupidClass {
 
